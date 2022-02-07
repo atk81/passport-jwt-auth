@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import databaseConnect from "./config/database"
+import databaseConnect from './config/database';
 import { apiRouter } from './routes/api';
 const app = express();
 dotenv.config();
@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 /**
  * ROUTES
  * The routes are defined in the src/routes folder.
-*/
+ */
 app.use(apiRouter);
 
 app.listen(process.env.PORT, () => {
