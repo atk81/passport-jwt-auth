@@ -11,7 +11,7 @@ export const validateSignup = [
     .isEmail()
     .withMessage('Email is invalid') // check if it's an email
     .custom(async (value) => {
-      const user = await findUser(value);
+      const user = await findUser({ email: value });
       if (user) {
         throw new Error('Email already in use');
       }

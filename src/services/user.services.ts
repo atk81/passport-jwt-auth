@@ -11,9 +11,9 @@ export const createUser = async (userInput: UserInput) => {
   }
 };
 
-export const findUser = async (email: string) => {
+export const findUser = async (obj: any) => {
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne(obj);
     if (!user) {
       return null;
     }
