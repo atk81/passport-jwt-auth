@@ -22,3 +22,16 @@ export const findUser = async (obj: any) => {
     throw new Error(err);
   }
 };
+
+export const validateUser = async (email: string, password: string) => {
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return { user: null, isValid: false };
+    }
+    const isValid = await user.comparePassword(password);
+    return { user, isValid };
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};

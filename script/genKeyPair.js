@@ -2,22 +2,19 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require("path");
 const genKeyPair = () => {
-    const key = crypto.generateKeyPairSync('rsa', {
-        modulusLength: 4096,
+    const keyPair = crypto.generateKeyPairSync('rsa', {
+        modulusLength: 4096, // bits - standard for RSA keys
         publicKeyEncoding: {
-            type: 'spki',
-            format: 'pem'
+            type: 'pkcs1', // "Public Key Cryptography Standards 1" 
+            format: 'pem' // Most common formatting choice
         },
         privateKeyEncoding: {
-            type: 'pkcs8',
-            format: 'pem',
-            cipher: 'aes-256-cbc',
-            passphrase: 'password'
+            type: 'pkcs1', // "Public Key Cryptography Standards 1"
+            format: 'pem' // Most common formatting choice
         }
     });
-    const publicKey = key.publicKey;
-    const privateKey = key.privateKey;
-    console.log(__dirname);
+    const publicKey = keyPair.publicKey;
+    const privateKey = keyPair.privateKey;
     fs.writeFileSync('../.id_rsa_public.pem', publicKey);
     fs.writeFileSync('../.id_rsa_private.pem', privateKey);
 }
