@@ -1,9 +1,17 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import passport from 'passport';
+import { strategy } from './config/passport';
 import databaseConnect from './config/database';
 import { apiRouter } from './routes/api';
 const app = express();
 dotenv.config();
+
+/**
+ * Passport middleware
+ */
+strategy(passport);
+app.use(passport.initialize());
 
 /**
  * MIDDLEWARE
