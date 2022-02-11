@@ -27,7 +27,6 @@ export const login = async (
   try {
     const isValidUser = await validateUser(email, password);
     if (isValidUser.isValid && isValidUser.user !== null) {
-      console.log('User valid');
       const tokenObject = issueJwt(isValidUser.user);
       res.status(200).json({
         message: 'Login Successful',

@@ -149,3 +149,8 @@ build/
 
 # Private key
 .id_rsa_private.pem
+.id_rsa_public.pem
+.private.key
+
+# Ignore script generated javascript
+script/*.js

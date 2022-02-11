@@ -5,8 +5,9 @@ import path from 'path';
 import jwt from 'jsonwebtoken';
 import { UserDocument } from '../models/user.model';
 import { findUser } from '../services/user.services';
-const pathToPublicKey = path.join(__dirname, '..', '..', '.id_rsa_public.pem');
-const pathToPrivateKey = path.join(__dirname, '..', '..','.id_rsa_private.pem');
+import { PASSPHRASE } from '../utils/secret';
+const pathToPublicKey = path.join(__dirname, '..', '..', '.public.key.pem');
+const pathToPrivateKey = path.join(__dirname, '..', '..','.private.key');
 const publicKey = fs.readFileSync(pathToPublicKey, 'utf8');
 const privateKey = fs.readFileSync(pathToPrivateKey, 'utf8');
 
@@ -16,7 +17,9 @@ const privateKey = fs.readFileSync(pathToPrivateKey, 'utf8');
 // At a minimum, you must pass the `jwtFromRequest` and `secretOrKey` properties
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: privateKey
+  secretOrKey: publicKey,
+  algorithms: ['RS256'],
+  maxage: '1 day',
 };
 
 /**
@@ -26,7 +29,6 @@ const options = {
 export const strategy = (passport: PassportStatic) => {
   passport.use(
     new Strategy(options, async (jwt_payload, done) => {
-      console.log('JWT payload: ', jwt_payload);
       try {
         const user = await findUser({ id: jwt_payload.id });
         if (user) {
@@ -52,15 +54,13 @@ export const issueJwt = (user: UserDocument) => {
     id: _id,
     iat: Date.now()
   };
-  const signedToken = jwt.sign(payload, privateKey, {
-    expiresIn: expiresIn
-  }, (err, token) => {
-    if(err) {
-      console.error('1: ', err);
-    } else{
-      console.log('token: ', token);
-    }
-  });
+  const signedToken = jwt.sign(payload, {
+    key: privateKey,
+    passphrase: PASSPHRASE,
+}, {
+    algorithm: 'RS256',
+    expiresIn: '1 day',
+});
 
   return {
     token: 'Bearer ' + signedToken, // Bearer is the prefix for JWT

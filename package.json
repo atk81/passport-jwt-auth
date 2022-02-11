@@ -9,7 +9,7 @@
     "build": "rimraf ./build && tsc",
     "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "genKey": "node script/genKeyPair.js"
+    "genKey": "tsc script/genKeyPair.ts && node script/genKeyPair.js"
   },
   "keywords": [],
   "author": "",
