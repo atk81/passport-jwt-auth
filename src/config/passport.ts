@@ -7,7 +7,7 @@ import { UserDocument } from '../models/user.model';
 import { findUser } from '../services/user.services';
 import { PASSPHRASE } from '../utils/secret';
 const pathToPublicKey = path.join(__dirname, '..', '..', '.public.key.pem');
-const pathToPrivateKey = path.join(__dirname, '..', '..','.private.key');
+const pathToPrivateKey = path.join(__dirname, '..', '..', '.private.key');
 const publicKey = fs.readFileSync(pathToPublicKey, 'utf8');
 const privateKey = fs.readFileSync(pathToPrivateKey, 'utf8');
 
@@ -19,7 +19,7 @@ const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: publicKey,
   algorithms: ['RS256'],
-  maxage: '1 day',
+  maxage: '1 day'
 };
 
 /**
@@ -32,11 +32,11 @@ export const strategy = (passport: PassportStatic) => {
       try {
         const user = await findUser({ id: jwt_payload.id });
         if (user) {
-          return done(null, user, {"message": "Successfully authenticated"});
+          return done(null, user, { message: 'Successfully authenticated' });
         }
-        return done(null, false, {"message": "User not found"});
+        return done(null, false, { message: 'User not found' });
       } catch (err) {
-        return done(err, false, {"message": "Error while authenticating"});
+        return done(err, false, { message: 'Error while authenticating' });
       }
     })
   );
@@ -54,13 +54,17 @@ export const issueJwt = (user: UserDocument) => {
     id: _id,
     iat: Date.now()
   };
-  const signedToken = jwt.sign(payload, {
-    key: privateKey,
-    passphrase: PASSPHRASE,
-}, {
-    algorithm: 'RS256',
-    expiresIn: '1 day',
-});
+  const signedToken = jwt.sign(
+    payload,
+    {
+      key: privateKey,
+      passphrase: PASSPHRASE
+    },
+    {
+      algorithm: 'RS256',
+      expiresIn: '1 day'
+    }
+  );
 
   return {
     token: 'Bearer ' + signedToken, // Bearer is the prefix for JWT
