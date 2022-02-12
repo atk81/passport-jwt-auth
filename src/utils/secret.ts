@@ -12,8 +12,6 @@ if (!MONGODB_URI) {
 
 const PASSPHRASE: string = process.env.PASSPHRASE || '12345678';
 
-export { 
-  MONGODB_URI,
-  PASSPHRASE
- };
+const ENVIRONMENT: string = process.env.ENVIRONMENT || 'DEV';
 
+export { MONGODB_URI, PASSPHRASE, ENVIRONMENT };
